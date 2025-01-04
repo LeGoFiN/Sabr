@@ -1,12 +1,13 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif; /* You can change this to a different font if desired */
     direction: rtl; /* Right-to-left for Arabic */
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4; /* Light background color */
 }
 
 header {
-    background-color: #333;
+    background-color: #333; /* Dark background for header */
     color: white;
     padding: 10px 0;
     text-align: center;
@@ -16,12 +17,14 @@ nav a {
     color: white;
     margin: 0 15px;
     text-decoration: none;
+    font-weight: bold; /* Make the navigation links bold */
 }
 
 .slideshow-container {
     position: relative;
     max-width: 100%;
     margin: auto;
+    overflow: hidden; /* Hide overflow to keep the layout clean */
 }
 
 .mySlides {
@@ -29,14 +32,20 @@ nav a {
 }
 
 .text {
+    position: absolute; /* Position the text overlay */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust for centering */
+    color: white; /* White text color for contrast */
     text-align: center;
-    margin: 20px 0;
+    font-size: 2em; /* Increase font size */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for better readability */
 }
 
 footer {
     text-align: center;
     padding: 10px 0;
-    background-color: #333;
+    background-color: #333; /* Dark background for footer */
     color: white;
     position: relative;
     bottom: 0;
