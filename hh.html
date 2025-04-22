@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Color Customizer</title>
+    <link rel="icon" href="images/favicon.ico" type="image/ico">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #000000;
+            color: #B5A38B;
+        }
+        h1 {
+            color: #B5A38B;
+        }
+        p {
+            color: #c1c1c1;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            max-height: 60px;
+            margin-right: auto;
+        }
+        #car-display {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            position: relative;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+        #car-container {
+            position: relative;
+            width: 80%;
+            height: 80%;
+            transition: transform 0.8s ease;
+        }
+        #car-image {
+            max-width: 100%;
+            max-height: 100%;
+            filter: brightness(0) saturate(100%);
+        }
+        .car-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            mix-blend-mode: multiply;
+            opacity: 0.8;
+        }
+        .color-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .color-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 3px solid #333;
+        }
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        .color-option.selected {
+            border-color: #FFA500;
+        }
+        #status {
+            margin-top: 20px;
+            font-style: italic;
+            color: #c1c1c1;
+        }
+        .view-control {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .view-btn {
+            padding: 10px 30px;
+            background: #FFA500;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .view-btn:hover {
+            background: #e69500;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img class="logo" src="images/gold.png" alt="Company Logo">
+    </div>
+    
+    <h1>Car Color Customizer</h1>
+    <p>Select a color to see it on the car and in the showroom lighting</p>
+    
+    <div id="car-display">
+        <div id="car-container">
+            <img id="car-image" src="bitmap.svg" alt="Audi A8 silhouette">
+            <div class="car-overlay" id="car-color-overlay"></div>
+        </div>
+    </div>
+    
+    <div class="view-control">
+        <button class="view-btn" onclick="changeView()">Change View</button>
+    </div>
+    
+    <div class="color-options">
+        <div class="color-option selected" style="background-color: #ff0000;" onclick="changeColor('#ff0000', 'Red')"></div>
+        <div class="color-option" style="background-color: #0000ff;" onclick="changeColor('#0000ff', 'Blue')"></div>
+        <div class="color-option" style="background-color: #00ff00;" onclick="changeColor('#00ff00', 'Green')"></div>
+        <div class="color-option" style="background-color: #ffff00;" onclick="changeColor('#ffff00', 'Yellow')"></div>
+        <div class="color-option" style="background-color: #000000;" onclick="changeColor('#000000', 'Black')"></div>
+        <div class="color-option" style="background-color: #ffffff;" onclick="changeColor('#ffffff', 'White')"></div>
+    </div>
+    
+    <div id="status">Current color: Red</div>
+    
+    <script>
+        let currentViewIndex = 0;
+        let currentColor = "#ff0000";
+        let currentColorName = "Red";
+        const viewPositions = ['0%', '-100%', '-200%', '100%', '0%']; // Position sequence for views
+        
+        // Initialize with red color
+        window.onload = function() {
+            document.getElementById('car-color-overlay').style.backgroundColor = currentColor;
+        };
+        
+        function changeColor(colorCode, colorName) {
+            // Update car color overlay
+            document.getElementById('car-color-overlay').style.backgroundColor = colorCode;
+            
+            // Update selected color indicator
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            currentColor = colorCode;
+            currentColorName = colorName;
+            document.getElementById('status').innerText = `Current color: ${colorName}`;
+            
+            // Send color to Node-RED
+            sendColorToNodeRED(colorCode, colorName);
+        }
+        
+        function changeView() {
+            currentViewIndex = (currentViewIndex + 1) % viewPositions.length;
+            document.getElementById('car-container').style.transform = `translateX(${viewPositions[currentViewIndex]})`;
+        }
+        
+        function sendColorToNodeRED(colorCode, colorName) {
+            // In a real implementation, this would make an API call to your Node-RED instance
+            console.log(`Sending color ${colorName} (${colorCode}) to Node-RED`);
+            
+            // Example of how you would make the actual API call:
+            /*
+            fetch('YOUR_NODE_RED_ENDPOINT', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    color: colorCode,
+                    colorName: colorName
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+            */
+            
+            // For now, we'll just update the status message
+            document.getElementById('status').innerText = `Current color: ${colorName} (Sent to lighting system)`;
+            setTimeout(() => {
+                document.getElementById('status').innerText = `Current color: ${colorName}`;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
